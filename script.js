@@ -86,7 +86,20 @@ $("#checkoutBtn").addEventListener("click", () => {
 });
 $("#langToggle").addEventListener("click", () => setLanguage(state.language === "en" ? "bn" : "en"));
 $("#themeSelect").addEventListener("change", (event) => setTheme(event.target.value));
-$("#accountBtn").addEventListener("click", () => document.querySelector("#account").scrollIntoView({ behavior: "smooth" }));
+function toggleProfileMenu(open) {
+  $("#profileMenu").classList.toggle("open", open);
+  $("#profileMenu").setAttribute("aria-hidden", String(!open));
+  $("#accountBtn").setAttribute("aria-expanded", String(open));
+}
+$("#accountBtn").addEventListener("click", (event) => {
+  event.stopPropagation();
+  toggleProfileMenu(!$("#profileMenu").classList.contains("open"));
+});
+$("#profileMenu").addEventListener("click", () => toggleProfileMenu(false));
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".profile-wrap")) toggleProfileMenu(false);
+});
+$("#logoutBtn").addEventListener("click", () => showToast(state.language === "bn" ? "আপনি লগআউট করেছেন" : "You have been logged out"));
 $("#loginBtn").addEventListener("click", () => showToast(state.language === "bn" ? "নিরাপদ লগইন শীঘ্রই আসছে" : "Secure sign-in is coming next"));
 $("#mobileMenu").addEventListener("click", () => document.querySelector(".nav-links").classList.toggle("mobile-open"));
 $("#newsletterForm").addEventListener("submit", (event) => { event.preventDefault(); showToast(state.language === "bn" ? "স্বাগতম — আপনার ইনবক্সে দেখা হবে" : "Welcome — see you in your inbox"); event.target.reset(); });
